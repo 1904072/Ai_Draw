@@ -8,8 +8,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/AiDraw/Error"); // Update if you want custom error handling
     app.UseHsts();
 }
 
@@ -20,26 +19,12 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Set the default route to point to AiDrawController
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=AiDraw}/{action=Index}/{id?}"); // Changed default controller to AiDraw
 
 app.Run();
-app.UseStaticFiles();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
-app.UseStaticFiles(); 
-app.UseDefaultFiles();
 
-var appl = builder.Build();
 
-// Add this before `app.UseRouting();`
-app.UseCors("AllowAll");
 

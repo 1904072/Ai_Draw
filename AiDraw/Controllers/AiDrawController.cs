@@ -4,20 +4,31 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace YourNamespace.Controllers
+namespace AiDraw.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AiController : ControllerBase
+    public class AiDrawController : Controller
     {
         private readonly HttpClient _httpClient;
 
-        public AiController()
+        public AiDrawController()
         {
             _httpClient = new HttpClient();
         }
 
-        [HttpPost("GenerateImage")]
+        // This action serves the Index view (HTML page)
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        // This action serves the About view (optional)
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        // API endpoint to handle AI image generation
+        [HttpPost("api/AiDraw/GenerateImage")]
         public async Task<IActionResult> GenerateImage([FromBody] AiRequest request)
         {
             // Replace with your OpenAI API Key
@@ -41,7 +52,8 @@ namespace YourNamespace.Controllers
 
             if (!response.IsSuccessStatusCode)
             {
-                return BadRequest(new { error = "Failed to generate image." });
+                var errorResponse = await response.Content.ReadAsStringAsync();
+                return BadRequest(new { error = "Failed to generate image.", details = errorResponse });
             }
 
             var responseBody = await response.Content.ReadAsStringAsync();
@@ -54,4 +66,5 @@ namespace YourNamespace.Controllers
         public string Prompt { get; set; }
     }
 }
+
 
